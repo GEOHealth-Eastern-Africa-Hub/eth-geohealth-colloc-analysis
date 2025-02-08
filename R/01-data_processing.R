@@ -43,14 +43,19 @@ getmeans <- function(Df) {
 Hdf$hour <- cut(Hdf$datetime, breaks = "hour")
 Hdf <- ddply(Hdf, .(hour), getmeans)
 
-# Convert hour to datetime and extract year, month, day, and hour
+# Fill in the blank hour with the date and time "00:00:00"
 Hdf <- Hdf |>
-  mutate(datetime = ymd_hms(hour)) |> 
-  mutate(year = year(datetime), month = month(datetime), day = day(datetime), hour = hour(datetime))
+  mutate(datetime = paste0(hour, sprintf("%02d:00:00", 0))) 
+  
+# Extract ymd_hms from datetime column
+Hdf$datetime <- ymd_hms(substr(Hdf$datetime, 1, 19)) 
 
+# Convert hour to datetime and extract year, month, day, and hour
 # Filter hourly data for >75% coverage and calculate proportion
 hourly_data <- Hdf |> 
-  mutate(prop = (n / 720) * 100) |> 
+  mutate(datetime = as.POSIXct(datetime, format = "%Y-%m-%d %H:%M:%S")) |> 
+  mutate(year = year(datetime), month = month(datetime), day = day(datetime), hour = hour(datetime),
+         prop = (n / 720) * 100) |> 
   select(datetime, year, month, day, hour, n, prop, pm25_env) |> 
   filter(prop > 75) 
 
@@ -96,15 +101,12 @@ names(BAM) <- c("datetime", "pm25_env")
 
 # Convert datetime to proper format and separate into year, month, day, hour
 Hourly_dfBAM <- BAM |> 
-  mutate(datetime = ymd_hm(datetime))
-
-# Convert datetime to 4 separate columns (year, month, day, hour)
-Hdf <- Hourly_dfBAM |> 
-  mutate(datetime = ymd_hms(datetime)) |> 
+  mutate(datetime = force_tz(mdy_hm(datetime), tzone = "Africa/Addis_Ababa")) |> 
+  mutate(datetime = as.POSIXct(datetime, format = "%Y-%m-%d %H:%M:%S"))|> 
   mutate(year = year(datetime), month = month(datetime), day = day(datetime), hour = hour(datetime))
 
 ## Calculate hourly proportions -------------------------------------------
-hourly_data <- Hdf |>
+hourly_data <- Hourly_dfBAM  |>
   mutate(n = length(pm25_env),
          prop = (n)*100) |>  # Proportions based on hourly data
   select(datetime, year, month, day, hour, n, prop, pm25_env) 
@@ -145,15 +147,15 @@ day_mod_df2 <- daily_data |>
 # COMBINE/ MERGE DATA ========================================================= 
 # Combine hourly data into one dataframe
 df_combined_hourly <- rbind(hrs_mod_df1, hrs_mod_df2) |> 
-  filter(datetime >= "2024-10-31" & datetime <= "2024-12-30")
+  filter(datetime >= as.POSIXct("2024-10-30 00:00:00") & datetime <= as.POSIXct("2024-12-30 23:00:00"))
 
 # Export hourly data to CSV
-write.csv(df_combined_hourly, file = paste0("outputs/df_combined_hourly.csv"))
+openxlsx::write.xlsx(df_combined_hourly, file = paste0("outputs/df_combined_hourly.xlsx"))
 
 # Combine daily data into one dataframe
 df_combined_daily <- rbind(day_mod_df1, day_mod_df2) |> 
   filter(datetime >= "2024-10-31" & datetime <= "2024-12-30")
 
 # Export daily data to CSV
-write.csv(df_combined_daily, file = paste0("outputs/df_combined_daily.csv"))
+openxlsx::write.xlsx(df_combined_daily, file = paste0("outputs/df_combined_daily.xlsx"))
 ###############################################################################
