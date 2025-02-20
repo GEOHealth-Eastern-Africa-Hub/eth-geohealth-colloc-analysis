@@ -83,7 +83,7 @@ saveWidget(ggplotly(ggp1), file = paste0("outputs/plots/hourly_sp1.html"))
 ggsave(ggp1,  width = 30, height = 20, units = "cm", dpi = 300, 
        file = paste0("outputs//plots/hourly_sp1.png"))
 
-## Create hourly scatter plot `PM2.5`Vs average PM of GEOHealth-BAM
+## Create hourly scatter plot `PM2.5`Vs average PM of AA Jacros-BAM
 ggp1a <- ggplot(data = agg_hourly_data, aes(x = pm25_sn_54, y = pm25_bam)) +
   stat_poly_line() + # assembling a single label with equation and R2
   stat_poly_eq(use_label(c("eq", "R2", "n")), 
@@ -100,7 +100,7 @@ saveWidget(ggplotly(ggp1a), file = paste0("outputs/plots/hourly_sp1a.html"))
 ggsave(ggp1a,  width = 30, height = 20, units = "cm", dpi = 300, 
        file = paste0("outputs/plots/hourly_sp1a.png"))
 
-## Create hourly scatter plot `average PM2.5`Vs average PM of GEOHealth-BAM
+## Create hourly scatter plot `average PM2.5`Vs average PM of AA Jacros-BAM
 ggpavg_b <- ggplot(data = agg_hourly_data, aes(x = PM25_avg, y = pm25_bam)) +
   stat_poly_line() + # assembling a single label with equation and R2
   stat_poly_eq(use_label(c("eq", "R2", "n")), 
@@ -111,7 +111,7 @@ ggpavg_b <- ggplot(data = agg_hourly_data, aes(x = PM25_avg, y = pm25_bam)) +
   theme_bw() +
   theme(axis.title.x = element_text(size = 16, face = "bold"),  # Increase size of x-axis label
         axis.title.y = element_text(size = 16, face = "bold")   # Increase size of y-axis label
-  )
+        )
 
 ggplotly(ggpavg_b)
 
@@ -137,7 +137,7 @@ saveWidget(ggplotly(ggp2), file = paste0("outputs/plots/daily_sp2.html"))
 ggsave(ggp2,  width = 30, height = 20, units = "cm", dpi = 300, 
        file = paste0("outputs/plots/daily_sp2.png"))
 
-## Create daily scatter plot `PM2.5`Vs average PM of GEOHealth-BAM
+## Create daily scatter plot `PM2.5`Vs average PM of AA Jacros-BAM
 ggp2a <- ggplot(data = agg_daily_data, aes(x = pm25_sn_54, y = pm25_bam)) +
   stat_poly_line() + # assembling a single label with equation and R2
   stat_poly_eq(use_label(c("eq", "R2", "n")), 
@@ -154,7 +154,7 @@ saveWidget(ggplotly(ggp2a), file = paste0("outputs/plots/daily_sp2a.html"))
 ggsave(ggp2a,  width = 30, height = 20, units = "cm", dpi = 300, 
        file = paste0("outputs/plots/daily_sp2a.png"))
 
-## Create daily scatter plot `avg. PM2.5`Vs average PM of GEOHealth-BAM
+## Create daily scatter plot `avg. PM2.5`Vs average PM of AA Jacros-BAM
 ggp_avg_b2 <- ggplot(data = agg_daily_data, aes(x = PM25_avg, y = pm25_bam)) +
   stat_poly_line() + # assembling a single label with equation and R2
   stat_poly_eq(use_label(c("eq", "R2", "n")), 
@@ -165,7 +165,7 @@ ggp_avg_b2 <- ggplot(data = agg_daily_data, aes(x = PM25_avg, y = pm25_bam)) +
   theme_bw() +
   theme(axis.title.x = element_text(size = 16, face = "bold"),  # Increase size of x-axis label
         axis.title.y = element_text(size = 16, face = "bold")   # Increase size of y-axis label
-  )
+        )
 
 ggplotly(ggp_avg_b2)
 
@@ -180,7 +180,6 @@ df_longf <- agg_hourly_data |>
                names_to = 'sn', values_to = 'PM')
 
 # Write output csv dataset out ------------------------------------------------
-
 write_csv(df_longf, file = paste0("outputs/hourlypm25_long_format_df.csv"))
 
 ggpm25_all <- ggplot(data = df_longf, aes(x = PM25_avg, y = PM, color = sn)) +
@@ -193,7 +192,7 @@ ggpm25_all <- ggplot(data = df_longf, aes(x = PM25_avg, y = PM, color = sn)) +
   theme_bw() +
   theme(axis.title.x = element_text(size = 16, face = "bold"),  # Increase size of x-axis label
         axis.title.y = element_text(size = 16, face = "bold")   # Increase size of y-axis label
-  )
+        )
 
 ggplotly(ggpm25_all)
 
@@ -212,7 +211,7 @@ ggpm25_all2 <- ggplot(data = df_longf, aes(x = PM25_avg, y = PM)) +
   theme_bw() +
   theme(axis.title.x = element_text(size = 16, face = "bold"),  # Increase size of x-axis label
         axis.title.y = element_text(size = 16, face = "bold")   # Increase size of y-axis label
-  ) +
+        ) +
   facet_wrap(~sn)
 
 ggplotly(ggpm25_all2)
@@ -243,7 +242,7 @@ ggpm25_avg <- ggplot(data = df_longf2, aes(x = PM25_avg, y = PM, color = sn)) +
   theme_bw() +
   theme(axis.title.x = element_text(size = 16, face = "bold"),  # Increase size of x-axis label
         axis.title.y = element_text(size = 16, face = "bold")   # Increase size of y-axis label
-  )
+        )
 
 ggplotly(ggpm25_avg)
 
@@ -262,7 +261,7 @@ ggpm25_avg2 <- ggplot(data = df_longf2, aes(x = PM25_avg, y = PM)) +
   theme_bw() +
   theme(axis.title.x = element_text(size = 16, face = "bold"),  # Increase size of x-axis label
         axis.title.y = element_text(size = 16, face = "bold")   # Increase size of y-axis label
-  ) +
+        ) +
   facet_wrap(~sn)
 
 ggplotly(ggpm25_avg2)
@@ -290,7 +289,7 @@ ggpm25_alld <- ggplot(data = df_longf, aes(x = PM25_avg, y = PM, color = sn)) +
   theme_bw() +
   theme(axis.title.x = element_text(size = 16, face = "bold"),  # Increase size of x-axis label
         axis.title.y = element_text(size = 16, face = "bold")   # Increase size of y-axis label
-  )
+        )
 
 ggplotly(ggpm25_alld)
 
@@ -309,7 +308,7 @@ ggpm25_alld2 <- ggplot(data = df_longf, aes(x = PM25_avg, y = PM)) +
   theme_bw() +
   theme(axis.title.x = element_text(size = 16, face = "bold"),  # Increase size of x-axis label
         axis.title.y = element_text(size = 16, face = "bold")   # Increase size of y-axis label
-  ) +
+        ) +
   facet_wrap(~sn)
 
 ggplotly(ggpm25_alld2)
@@ -338,7 +337,7 @@ ggpm25_avgd <- ggplot(data = df_longf2, aes(x = PM25_avg, y = PM, color = sn)) +
   theme_bw() +
   theme(axis.title.x = element_text(size = 16, face = "bold"),  # Increase size of x-axis label
         axis.title.y = element_text(size = 16, face = "bold")   # Increase size of y-axis label
-  )
+        )
 
 ggplotly(ggpm25_avgd)
 
@@ -357,7 +356,7 @@ ggpm25_avgd2 <- ggplot(data = df_longf2, aes(x = PM25_avg, y = PM)) +
   theme_bw() +
   theme(axis.title.x = element_text(size = 16, face = "bold"),  # Increase size of x-axis label
         axis.title.y = element_text(size = 16, face = "bold")   # Increase size of y-axis label
-  ) +
+        ) +
   facet_wrap(~sn)
 
 ggplotly(ggpm25_avgd2)
